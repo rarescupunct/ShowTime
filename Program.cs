@@ -1,5 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ShowTime.Components;
+using ShowTime.Data;
+using ShowTime.Repositories.Implementation;
+using ShowTime.Repositories.Implementation.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,13 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddDbContext<ShowTimeContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+
+//builder.Services.AddScoped<IRepositoryBand, RepositoryBand>();
 
 var app = builder.Build();
 
