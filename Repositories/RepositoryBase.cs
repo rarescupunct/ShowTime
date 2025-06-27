@@ -35,7 +35,7 @@ namespace ShowTime.Repositories.Implementation{
             _dbSet.Update(entity);
         }
         
-        public Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.ToListAsync();
         }
