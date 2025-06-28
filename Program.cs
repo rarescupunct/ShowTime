@@ -19,7 +19,10 @@ builder.Services.AddDbContext<ShowTimeContext>(options =>
 });
 
 
-//builder.Services.AddScoped<IRepositoryBand, RepositoryBand>();
+
+builder.Services.AddScoped<IRepositoryBand, RepositoryBand>();
+builder.Services.AddScoped<IRepositoryFestivals, RepositoryFestivals>();
+builder.Services.AddScoped<IRepositoryBooking, RepositoryBooking>();
 
 var app = builder.Build();
 
