@@ -2,8 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ShowTime.Components;
 using ShowTime.Data;
+using ShowTime.Repositories;
 using ShowTime.Repositories.Implementation;
-using ShowTime.Repositories.Implementation.Interfaces;
+using ShowTime.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

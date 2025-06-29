@@ -1,8 +1,6 @@
-﻿using ShowTime.Data;
-using ShowTime.Models;
-using ShowTime.Repositories.Implementation.Interfaces;
+﻿
 
-namespace ShowTime.Repositories.Implementation.Interfaces
+namespace ShowTime.Repositories.Interfaces
 {
     public interface IRepositoryBase<T> where T : class
     {

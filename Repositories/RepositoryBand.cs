@@ -4,7 +4,7 @@ using ShowTime.Components;
 using ShowTime.Data;
 using ShowTime.Enums;
 using ShowTime.Models;
-using ShowTime.Repositories.Implementation.Interfaces;
+using ShowTime.Repositories.Interfaces;
 
 namespace ShowTime.Repositories.Implementation{
 
@@ -14,12 +14,11 @@ namespace ShowTime.Repositories.Implementation{
         {
         }
 
-        /*
-         public async Task GetByGenre(Genre genre)
+        
+         public async Task<IEnumerable<Band>> GetByGenreAsync(Genre genre)
         {
-            return await _dbSet;
+            return await _dbSet.Where(e => e.Genre == genre).ToListAsync(); 
         }
-        */
         
     }
 }

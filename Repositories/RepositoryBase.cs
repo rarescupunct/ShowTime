@@ -1,18 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShowTime.Data;
-using ShowTime.Repositories.Implementation.Interfaces;
 using static ShowTime.Data.ShowTimeContext;
 using ShowTime.Data;
 using ShowTime.Models;
-using ShowTime.Repositories.Implementation.Interfaces;
+using ShowTime.Repositories.Interfaces;
 
 
 namespace ShowTime.Repositories.Implementation{
 
     public class RepositoryBase<T>:IRepositoryBase<T> where T:class
     {
-        private readonly ShowTimeContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly ShowTimeContext _context;
+        protected readonly DbSet<T> _dbSet;
 
         public RepositoryBase(ShowTimeContext context)
         {
