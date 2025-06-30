@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ShowTime.Components;
 using ShowTime.Data;
-using ShowTime.Repositories;
 using ShowTime.Repositories.Implementation;
 using ShowTime.Repositories.Interfaces;
 
