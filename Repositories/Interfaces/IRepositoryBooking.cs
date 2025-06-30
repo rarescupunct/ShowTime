@@ -2,7 +2,7 @@
 
 namespace ShowTime.Repositories.Interfaces{
 
-    public interface IRepositoryBooking
+    public interface IRepositoryBooking:IRepositoryBase<Booking>
     {
         Task<IEnumerable<Booking>> GetBookingsByFestivalAsync(Guid festivalId);
         Task<int> GetBookingCountForFestivalAsync(Guid festivalId);

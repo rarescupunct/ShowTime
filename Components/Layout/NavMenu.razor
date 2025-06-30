@@ -4,9 +4,36 @@
     <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
     
     <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
-    <MudNavLink Href="/listbands" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">All Bands</MudNavLink>
-    <MudNavLink Href="/addband" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">New Band</MudNavLink>
-
+    <MudNavGroup Title="Festivals Menu(wip)" Expanded="_expandedFestivals" @onclick="OnClickBigSmolFestivals">
+        <MudNavLink Href="/addband">Add New Band</MudNavLink>
+        <MudNavLink Href="/listband">Show Bands</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Bands Menu" Expanded="_expandedBands" @onclick="OnClickBigSmolBands">
+        <MudNavLink Href="/addband">Add New Band</MudNavLink>
+        <MudNavLink Href="/listband">Show Bands</MudNavLink>
+    </MudNavGroup>
+    <MudNavGroup Title="Booking Menu(wip)" Expanded="_expandedBookings" @onclick="OnClickBigSmolBookings">
+        <MudNavLink Href="/addbooking">Add New Booking</MudNavLink>
+        <MudNavLink Href="/listband">Show Bookings</MudNavLink>
+    </MudNavGroup>
 </MudNavMenu>
+
+@code{
+    bool _expandedFestivals;
+    bool _expandedBookings;
+    bool _expandedBands;
+    private void OnClickBigSmolBands()
+    {
+        _expandedBands = !_expandedBands;
+    }
+    private void OnClickBigSmolFestivals()
+    {
+        _expandedFestivals = !_expandedFestivals;
+    }
+    private void OnClickBigSmolBookings()
+    {
+        _expandedBookings = !_expandedBookings;
+    }
+}
 
 

@@ -1,8 +1,7 @@
-﻿@page "/addband"
+﻿@page "/addbooking"
 @rendermode InteractiveServer
 
-@inject IRepositoryBand RepositoryBand
-@using ShowTime.Enums
+@inject IRepositoryBooking RepositoryBooking
 @using ShowTime.Repositories.Interfaces
 @using ShowTime.Models
 
@@ -13,15 +12,15 @@
     <MudItem xs="12" sm="7">
         <MudCard>
             <MudCardContent>
-                <MudTextField Label="Name"
-                              @bind-Value="model.Name" For="@(() => model.Name)"/>
+                <MudTextField Label="Email"
+                              @bind-Value="model.Email" For="@(() => model.Email)"/>
                 <MudDivider/>
-                <MudSelect T="Genre" @bind-Value="model.Genre">
-                    @foreach (var item in Enum.GetValues(typeof(Genre)).Cast<Genre>())
-                    {
-                        <MudSelectItem Value="@item">@item</MudSelectItem>
-                    }
-                </MudSelect>
+                <MudTextField Label="Date"
+                              @bind-Value="model.Date" For="@(() => model.Date)"/>
+                <MudDivider/>
+                <MudTextField Label="Festival"
+                              @bind-Value="model.Festival" For="@(() => model.Festival)"/>
+                <MudDivider/>
             </MudCardContent>
             <MudCardActions>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
@@ -51,9 +50,9 @@
     </MudItem>
 </MudGrid>
 </EditForm>
+
 @code {
-    Genre enumGenre;
-    Band model = new Band();
+    Booking model = new Booking();
     bool success;
     
 
@@ -62,7 +61,7 @@
         
         try
         {
-            await RepositoryBand.AddAsync(model);
+            await RepositoryBooking.AddAsync(model);
             success = true;
         }
         catch
@@ -70,6 +69,6 @@
             success = false;
         }
 
-        await RepositoryBand.SaveChangesAsync();
+        await RepositoryBooking.SaveChangesAsync();
     }
 }
