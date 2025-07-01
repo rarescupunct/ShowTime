@@ -1,0 +1,27 @@
+﻿@page "/listfestival"
+@rendermode InteractiveServer
+
+
+@using ShowTime.Models
+@using ShowTime.Repositories.Interfaces
+@inject IRepositoryFestivals repo
+
+
+
+<MudDataGrid Items="@Elements" Hover="true" Bordered="true" Striped="true">
+    <Columns>
+        <PropertyColumn Property="x => x.Name" Title="Name" />
+        <PropertyColumn Property="x => x.Location" Title="Location" />
+        <PropertyColumn Property="x => x.StartDate" Title="Start Date" Format="dd.mm.yyyy" />
+        <PropertyColumn Property="x => x.EndDate" Title="End Date" Format="dd.mm.yyyy"/>
+    </Columns>
+</MudDataGrid>
+
+@code { 
+    private IEnumerable<Festival> Elements = new List<Festival>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await repo.GetAllAsync();
+    }
+}

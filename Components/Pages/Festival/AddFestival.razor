@@ -1,0 +1,72 @@
+﻿@page "/addfestival"
+
+@rendermode InteractiveServer
+
+@inject IRepositoryFestivals repo
+@using ShowTime.Repositories.Interfaces
+@using ShowTime.Models
+
+
+<EditForm Model="@model" OnValidSubmit="OnValidSubmit">
+<DataAnnotationsValidator/>
+<MudGrid>
+    <MudItem xs="12" sm="7">
+        <MudCard>
+            <MudCardContent>
+                <MudTextField Label="Name"
+                              @bind-Value="model.Name" For="@(() => model.Name)"/>
+                <MudDivider/>
+                <MudTextField Label="L0cation"
+                              @bind-Value="model.Location" For="@(() => model.Location)"/>
+                <MudDivider/>
+                <MudDatePicker Label="Start Date" DateFormat="dd.mm.yyyy" @bind-Date="startdate"/>
+                <MudDatePicker Label="End Date" DateFormat="dd.mm.yyyy" @bind-Date="enddate"/>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="5">
+        <MudPaper Class="pa-4 mud-height-full">
+            <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+            @if (success)
+            {
+                <MudText Color="Color.Success">Success</MudText>
+                
+            }
+            else
+            {
+                <MudText Color="@Color.Error">
+                    <ValidationSummary />
+                </MudText>
+            }
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="12">
+        <MudText Typo="Typo.body2" Align="Align.Center">
+            Fill out the form correctly to see the success message.
+        </MudText>
+    </MudItem>
+</MudGrid>
+</EditForm>
+@code {
+    private DateTime? startdate, enddate = DateTime.Today;
+    Festival model = new Festival();
+    bool success;
+    
+
+    private async Task OnValidSubmit()
+    {
+        
+        if (enddate < startdate && startdate < DateTime.Today) success = false;
+        else
+        {
+            model.StartDate = startdate.Value;
+            model.EndDate = enddate.Value;
+            await repo.AddAsync(model);
+            success = true;
+        }
+        await repo.SaveChangesAsync();
+    }
+}
