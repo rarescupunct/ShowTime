@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 
 @inject IRepositoryBooking RepositoryBooking
+@inject IRepositoryFestivals RepositoryFestivals
 @using ShowTime.Repositories.Interfaces
 @using ShowTime.Models
 
@@ -19,7 +20,7 @@
                               @bind-Value="model.Date" For="@(() => model.Date)"/>
                 <MudDivider/>
                 <MudTextField Label="Festival"
-                              @bind-Value="model.Festival" For="@(() => model.Festival)"/>
+                              @bind-Value="_nameFestival" For="@(() => _nameFestival)"/>
                 <MudDivider/>
             </MudCardContent>
             <MudCardActions>
@@ -52,7 +53,9 @@
 </EditForm>
 
 @code {
-    Booking model = new Booking();
+    string _nameFestival = "";
+    Booking model;
+    Festival festival;
     bool success;
     
 
@@ -61,6 +64,8 @@
         
         try
         {
+            model.Festival = await RepositoryFestivals.GetFestivalByNameAsync(_nameFestival);
+            model.FestivalID = model.Festival.ID;
             await RepositoryBooking.AddAsync(model);
             success = true;
         }

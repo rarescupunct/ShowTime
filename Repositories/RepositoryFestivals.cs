@@ -22,6 +22,11 @@ namespace ShowTime.Repositories.Implementation{
         {
             return await _dbSet.Where(f => f.Bands.Any(b => b.Id == bandId)).ToListAsync();
         }
+
+        public async Task<Festival> GetFestivalByNameAsync(string festivalName)
+        {
+            return await _dbSet.Where(f=>f.Name == festivalName).FirstOrDefaultAsync();
+        }
     }
 
 }
