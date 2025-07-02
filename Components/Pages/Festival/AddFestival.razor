@@ -52,13 +52,12 @@
 </EditForm>
 @code {
     private DateTime? startdate, enddate = DateTime.Today;
-    Festival model = new Festival();
+    Festival model;
     bool success;
     
 
     private async Task OnValidSubmit()
     {
-        
         if (enddate < startdate && startdate < DateTime.Today) success = false;
         else
         {

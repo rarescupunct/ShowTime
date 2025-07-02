@@ -1,23 +1,40 @@
 ﻿@page "/listfestival"
 @rendermode InteractiveServer
-
-
 @using ShowTime.Models
 @using ShowTime.Repositories.Interfaces
 @inject IRepositoryFestivals repo
 
 
+<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Location</MudTh>
+        <MudTh>Start Date</MudTh>
+        <MudTh>End Date</MudTh>
+        <MudTh>Update</MudTh>
+        <MudTh>Delete</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Location">@context.Location</MudTd>
+        <MudTd DataLabel="Start Date">
+            @context.StartDate
+        </MudTd>
+        <MudTd DataLabel="End Date">
+            @context.EndDate
+        </MudTd>
+        
+        <MudTd DataLabel="Update">
+            <MudButton Color="Color.Tertiary">Update</MudButton>
+        </MudTd>
+        
+        <MudTd DataLabel="Delete">
+            <MudButton Color="Color.Tertiary">Delete</MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
 
-<MudDataGrid Items="@Elements" Hover="true" Bordered="true" Striped="true">
-    <Columns>
-        <PropertyColumn Property="x => x.Name" Title="Name" />
-        <PropertyColumn Property="x => x.Location" Title="Location" />
-        <PropertyColumn Property="x => x.StartDate" Title="Start Date" Format="dd.mm.yyyy" />
-        <PropertyColumn Property="x => x.EndDate" Title="End Date" Format="dd.mm.yyyy"/>
-    </Columns>
-</MudDataGrid>
-
-@code { 
+@code {
     private IEnumerable<Festival> Elements = new List<Festival>();
 
     protected override async Task OnInitializedAsync()
