@@ -7,23 +7,23 @@
 
 
 
-    <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
         <HeaderContent>
-            <MudTh>Name</MudTh>
-            <MudTh>Genre</MudTh>
-            <MudTh>Update</MudTh>
-            <MudTh>Delete</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Genre</MudTh>
+        <MudTh>Update</MudTh>
+        <MudTh>Delete</MudTh>
         </HeaderContent>
         <RowTemplate>
             @if(edit != context.Id){
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Location">@context.Genre</MudTd>
-            <MudTd DataLabel="Update">
-                <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="() => edit = context.Id">Update</MudButton>
-            </MudTd>
-            <MudTd DataLabel="Delete">
-                <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="() => DeleteBandAsync(context)">Delete</MudButton>
-            </MudTd>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd DataLabel="Location">@context.Genre</MudTd>
+                <MudTd DataLabel="Update">
+                    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="() => edit = context.Id">Update</MudButton>
+                </MudTd>
+                <MudTd DataLabel="Delete">
+                    <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" @onclick="() => DeleteBandAsync(context)">Delete</MudButton>
+                </MudTd>
             }
             else
             {
@@ -42,10 +42,10 @@
                 <MudButton Color="Color.Error" OnClick="@(() => edit=null)">Cancel</MudButton>
             }
         </RowTemplate>
-    </MudTable>
+        </MudTable>
 
 @code {
-    private Guid? edit = null;
+    private Guid? edit;
 
     
     private IEnumerable<Band> Elements = new List<Band>();

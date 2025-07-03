@@ -15,30 +15,67 @@
         <MudTh>Delete</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Location">@context.Location</MudTd>
-        <MudTd DataLabel="Start Date">
-            @context.StartDate
-        </MudTd>
-        <MudTd DataLabel="End Date">
-            @context.EndDate
-        </MudTd>
-        
-        <MudTd DataLabel="Update">
-            <MudButton Color="Color.Tertiary">Update</MudButton>
-        </MudTd>
-        
-        <MudTd DataLabel="Delete">
-            <MudButton Color="Color.Tertiary">Delete</MudButton>
-        </MudTd>
+        @if (edit != context.ID)
+        {
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Location">@context.Location</MudTd>
+            <MudTd DataLabel="Start Date">
+                @context.StartDate
+            </MudTd>
+            <MudTd DataLabel="End Date">
+                @context.EndDate
+            </MudTd>
+
+            <MudTd DataLabel="Update">
+                <MudButton Color="Color.Tertiary" @onclick="() => edit = context.ID">Update</MudButton>
+            </MudTd>
+
+            <MudTd DataLabel="Delete">
+                <MudButton Color="Color.Tertiary" @onclick="() => DeleteAsync(context)">Delete</MudButton>
+            </MudTd>
+        }
+        else
+        {
+            <MudTextField Label="Name"
+                          @bind-Value="context.Name" For="@(() => context.Name)"/>
+            <MudDivider/>
+            <MudTextField Label="Location"
+                          @bind-Value="context.Location" For="@(() => context.Location)"/>
+            <MudDivider/>
+            <MudDatePicker Label="Start Date" DateFormat="dd.mm.yyyy" @bind-Date="startdate"/>
+            <MudDatePicker Label="End Date" DateFormat="dd.mm.yyyy" @bind-Date="enddate"/>
+            <MudButton Color="Color.Tertiary" OnClick="@(() => Save(context))">Save</MudButton>
+            <MudButton Color="Color.Error" OnClick="@(() => edit=null)">Cancel</MudButton>
+        }
     </RowTemplate>
 </MudTable>
 
 @code {
+    private DateTime? startdate, enddate;
+    private Guid? edit;
     private IEnumerable<Festival> Elements = new List<Festival>();
 
     protected override async Task OnInitializedAsync()
     {
         Elements = await repo.GetAllAsync();
+    }
+    
+    private async void DeleteAsync(Festival festival)
+    {
+        repo.Delete(festival);
+        await repo.SaveChangesAsync();
+        Elements = await repo.GetAllAsync();
+        StateHasChanged();
+    }
+
+    private async void Save(Festival festival)
+    {
+        festival.StartDate = startdate.Value;
+        festival.EndDate = enddate.Value;
+        repo.Update(festival);
+        await repo.SaveChangesAsync();
+        Elements = await repo.GetAllAsync();
+        edit = null;
+        StateHasChanged();
     }
 }
