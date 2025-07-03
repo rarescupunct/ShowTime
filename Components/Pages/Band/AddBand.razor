@@ -16,7 +16,7 @@
                 <MudTextField Label="Name"
                               @bind-Value="model.Name" For="@(() => model.Name)"/>
                 <MudDivider/>
-                <MudSelect T="Genre" @bind-Value="model.Genre">
+                <MudSelect T="Genre" @bind-Value="model.Genre" Required="true">
                     @foreach (var item in Enum.GetValues(typeof(Genre)).Cast<Genre>())
                     {
                         <MudSelectItem Value="@item">@item</MudSelectItem>

@@ -1,8 +1,8 @@
 ﻿@page "/addbooking"
 @rendermode InteractiveServer
 
-@inject IRepositoryBooking RepositoryBooking
-@inject IRepositoryFestivals RepositoryFestivals
+@inject IRepositoryBooking repobooking
+@inject IRepositoryFestivals repofestivals
 @using ShowTime.Repositories.Interfaces
 @using ShowTime.Models
 
@@ -19,12 +19,15 @@
                 <MudTextField Label="Date"
                               @bind-Value="model.Date" For="@(() => model.Date)"/>
                 <MudDivider/>
-                <MudTextField Label="Festival"
-                              @bind-Value="_nameFestival" For="@(() => _nameFestival)"/>
-                <MudDivider/>
+                <MudSelect T="Festival" @bind-Value="pickedfestival" Required="true">
+                    @foreach (var festival in Festivals)
+                    {
+                        <MudSelectItem Value="@festival.Name">@festival.Name</MudSelectItem>
+                    }
+                </MudSelect>
             </MudCardContent>
             <MudCardActions>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto">Submit</MudButton>
             </MudCardActions>
         </MudCard>
     </MudItem>
@@ -53,27 +56,32 @@
 </EditForm>
 
 @code {
-    string _nameFestival = "";
-    Booking model;
-    Festival festival;
+    Booking model = new Booking();
+    Festival pickedfestival = new Festival();
+    private IEnumerable<Festival> Festivals = new List<Festival>();
     bool success;
     
-
+    protected override async Task OnInitializedAsync()
+    {
+        Festivals = await repofestivals.GetAllAsync();
+    }
+    
     private async Task OnValidSubmit()
     {
-        
         try
         {
-            model.Festival = await RepositoryFestivals.GetFestivalByNameAsync(_nameFestival);
-            model.FestivalID = model.Festival.ID;
-            await RepositoryBooking.AddAsync(model);
+            model.Festival = pickedfestival;
+            model.Festival = pickedfestival;
+            pickedfestival.Bookings.Add(model);
+            repofestivals.Update(pickedfestival);
+            await repobooking.AddAsync(model);
             success = true;
         }
         catch
         {
             success = false;
         }
-
-        await RepositoryBooking.SaveChangesAsync();
+        await repobooking.SaveChangesAsync();
+        await repofestivals.SaveChangesAsync();
     }
 }
