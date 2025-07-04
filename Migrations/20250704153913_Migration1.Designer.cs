@@ -12,8 +12,8 @@ using ShowTime.Data;
 namespace ShowTime.Migrations
 {
     [DbContext(typeof(ShowTimeContext))]
-    [Migration("20250704072258_CevaMigratie")]
-    partial class CevaMigratie
+    [Migration("20250704153913_Migration1")]
+    partial class Migration1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

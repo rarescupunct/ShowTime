@@ -1,22 +1,28 @@
 ﻿@page "/addbandfestival"
 @rendermode InteractiveServer
 
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using ShowTime.Models
+@using ShowTime.Repositories.Implementation
 @using ShowTime.Repositories.Interfaces
 
 @inject IRepositoryBand repoband
-@inject IRepositoryFestivals repofesttivals
+@inject IRepositoryFestivals repofestivals
 
-<MudTable Items="@Festivals" Hover="true" Breakpoint="Breakpoint.Sm">
-    <HeaderContent>
-        <MudTh>Name</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nr">@context.Name</MudTd>
-        <MudButton Color="Color.Success" @onclick="()=>pickedfestival = context.ID">Pick Me</MudButton>
+
+@if (pickedfestival == null)
+{
+    <MudTable Items="@Festivals" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.Name</MudTd>
+            <MudButton Color="Color.Success" @onclick="()=>GenerateTableAsync(context)">Pick Me</MudButton>
         </RowTemplate>
-</MudTable>
-@if (pickedfestival != null)
+    </MudTable>
+}
+else
 {
     <MudTable Items="@Bands" Hover="true" Breakpoint="Breakpoint.Sm">
         <HeaderContent>
@@ -24,22 +30,37 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nr">@context.Name</MudTd>
-            <MudButton Color="Color.Success" @onclick="()=>pickedfestival=null">Add to Festival</MudButton>
+            <MudButton Color="Color.Success" @onclick="AddBandToFestivalAsync">Add to Festival</MudButton>
         </RowTemplate>
     </MudTable>
     
 }
 @code {
-    private Guid? pickedfestival;
+    private Festival pickedfestival;
+    private Band pickedband;
     private IEnumerable<Festival> Festivals = new List<Festival>();
     private IEnumerable<Band> Bands = new List<Band>();
     
     
     protected override async Task OnInitializedAsync()
     {
-        Festivals = await repofesttivals.GetAllAsync();
-        Bands = await repoband.GetAllAsync();
+        Festivals = await repofestivals.GetAllAsync();
     }
 
+    private async Task GenerateTableAsync(Festival festival)
+    {
+        pickedfestival = festival;
+        Bands = await repoband.GetAvailableByIdAsync(festival.ID);
+    }
     
+    private async Task AddBandToFestivalAsync()
+    {
+        if (pickedband != null && pickedfestival != null)
+        {
+            await repoband.AddBFContextAsync(pickedband, pickedfestival);
+        }
+
+        pickedfestival = null;
+        StateHasChanged();
+    }
 }

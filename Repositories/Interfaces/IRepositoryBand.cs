@@ -7,7 +7,8 @@ namespace ShowTime.Repositories.Interfaces{
 
     public interface IRepositoryBand: IRepositoryBase<Band>
     {
-        public Task<IEnumerable<Band>> GetByGenreAsync(Genre genre);
-        
+        Task<IEnumerable<Band>> GetByGenreAsync(Genre genre);
+        Task<IEnumerable<Band>> GetAvailableByIdAsync(Guid festivalID);
+        Task AddBFContextAsync(Band band, Festival festival);
     }
 }
