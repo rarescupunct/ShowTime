@@ -50,7 +50,8 @@ namespace ShowTime.Repositories.Implementation{
                 };
 
                 await Context.BandFestivals.AddAsync(bf);
-                await Context.SaveChangesAsync();
+                var changes = await Context.SaveChangesAsync();
+                Console.WriteLine($"Saved changes: {changes}");
             }
         }
     }

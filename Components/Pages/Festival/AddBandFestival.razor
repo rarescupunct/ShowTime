@@ -1,9 +1,8 @@
 ﻿@page "/addbandfestival"
 @rendermode InteractiveServer
 
-@using Microsoft.EntityFrameworkCore.Metadata.Internal
+
 @using ShowTime.Models
-@using ShowTime.Repositories.Implementation
 @using ShowTime.Repositories.Interfaces
 
 @inject IRepositoryBand repoband
@@ -17,7 +16,7 @@
             <MudTh>Name</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Nr">@context.Name</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudButton Color="Color.Success" @onclick="()=>GenerateTableAsync(context)">Pick Me</MudButton>
         </RowTemplate>
     </MudTable>
@@ -59,6 +58,7 @@ else
         {
             await repoband.AddBFContextAsync(pickedband, pickedfestival);
         }
+        
 
         pickedfestival = null;
         StateHasChanged();

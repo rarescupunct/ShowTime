@@ -7,14 +7,27 @@
 @using ShowTime.Repositories.Interfaces
 @using ShowTime.Models
 
+
+
+@if (pickedfestival == null)
+{
 <MudContainer>
     <MudText Align="Align.Start">
         Selectati festivalul pentru care doriti sa faceti rezervarea:
     </MudText>
+    <MudTable Items="@festivals">
+        <HeaderContent>
+            Name
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudButton Color="Color.Success" @onclick="()=>pickedfestival=context">Pick Me</MudButton>
+        </RowTemplate>
+    </MudTable>
 </MudContainer>
-
-
-
+}
+else
+{
 <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
 <DataAnnotationsValidator/>
 <MudGrid>
@@ -54,12 +67,20 @@
     </MudItem>
 </MudGrid>
 </EditForm>
-
+}
 @code {
+    private IEnumerable<Festival> festivals = new List<Festival>();
     Booking model = new();
+    Festival pickedfestival = new();
+    
     bool success;
     private DateTime? date = DateTime.Today;
-    
+
+    protected override  async Task OnInitializedAsync()
+    {
+        festivals = await repofestivals.GetAllAsync();
+    }
+
     private async Task OnValidSubmit()
     {
         if (date < DateTime.Today)
@@ -69,7 +90,7 @@
         else
         {
             model.Date = date.Value;
-            await repobooking.AddAsync(model);
+            repobooking.AddAsync(model);
             await repobooking.SaveChangesAsync();
         }
     }
