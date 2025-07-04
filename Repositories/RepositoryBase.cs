@@ -10,43 +10,43 @@ namespace ShowTime.Repositories.Implementation{
 
     public class RepositoryBase<T>:IRepositoryBase<T> where T:class
     {
-        protected readonly ShowTimeContext _context;
-        protected readonly DbSet<T> _dbSet;
+        protected readonly ShowTimeContext Context;
+        protected readonly DbSet<T> DbSet;
 
         public RepositoryBase(ShowTimeContext context)
         {
-            _context = context;
-            _dbSet = _context.Set<T>();
+            Context = context;
+            DbSet = Context.Set<T>();
         }
 
         public async Task AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            await DbSet.AddAsync(entity);
         }
         
         public void Delete(T entity)
         {
-           _dbSet.Remove(entity);
+           DbSet.Remove(entity);
         }
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            DbSet.Update(entity);
         }
         
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            return await DbSet.ToListAsync();
         }
 
         public async Task<T?> GetByIdAsync(Guid id)
         {
-            return await _dbSet.FindAsync(id);
+            return await DbSet.FindAsync(id);
         }
 
         public async Task SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
         
         

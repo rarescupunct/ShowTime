@@ -3,8 +3,16 @@
 
 @inject IRepositoryBooking repobooking
 @inject IRepositoryFestivals repofestivals
+@using MudBlazor.Extensions
 @using ShowTime.Repositories.Interfaces
 @using ShowTime.Models
+
+<MudContainer>
+    <MudText Align="Align.Start">
+        Selectati festivalul pentru care doriti sa faceti rezervarea:
+    </MudText>
+</MudContainer>
+
 
 
 <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
@@ -16,15 +24,7 @@
                 <MudTextField Label="Email"
                               @bind-Value="model.Email" For="@(() => model.Email)"/>
                 <MudDivider/>
-                <MudTextField Label="Date"
-                              @bind-Value="model.Date" For="@(() => model.Date)"/>
-                <MudDivider/>
-                <MudSelect T="Festival" @bind-Value="pickedfestival" Required="true">
-                    @foreach (var festival in Festivals)
-                    {
-                        <MudSelectItem Value="@festival.Name">@festival.Name</MudSelectItem>
-                    }
-                </MudSelect>
+                <MudDatePicker Label="Pick a date, any date" @bind-Date="date"/>
             </MudCardContent>
             <MudCardActions>
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Tertiary" Class="ml-auto">Submit</MudButton>
@@ -56,32 +56,21 @@
 </EditForm>
 
 @code {
-    Booking model = new Booking();
-    Festival pickedfestival = new Festival();
-    private IEnumerable<Festival> Festivals = new List<Festival>();
+    Booking model = new();
     bool success;
-    
-    protected override async Task OnInitializedAsync()
-    {
-        Festivals = await repofestivals.GetAllAsync();
-    }
+    private DateTime? date = DateTime.Today;
     
     private async Task OnValidSubmit()
     {
-        try
-        {
-            model.Festival = pickedfestival;
-            model.Festival = pickedfestival;
-            pickedfestival.Bookings.Add(model);
-            repofestivals.Update(pickedfestival);
-            await repobooking.AddAsync(model);
-            success = true;
-        }
-        catch
+        if (date < DateTime.Today)
         {
             success = false;
         }
-        await repobooking.SaveChangesAsync();
-        await repofestivals.SaveChangesAsync();
+        else
+        {
+            model.Date = date.Value;
+            await repobooking.AddAsync(model);
+            await repobooking.SaveChangesAsync();
+        }
     }
 }

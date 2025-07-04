@@ -56,33 +56,37 @@
 
     private readonly PaletteLight _lightPalette = new()
     {
-        Black = "#110e2d",
-        AppbarText = "#424242",
-        AppbarBackground = "rgba(255,255,255,0.8)",
-        DrawerBackground = "#ffffff",
-        GrayLight = "#e8e8e8",
-        GrayLighter = "#f9f9f9",
+        Black = "#000000",
+        Background = "#FFA500", // Orange background
+        Surface = "#E59400",    // Slightly darker orange
+        AppbarBackground = "#2c2c2c", // Dark gray AppBar
+        AppbarText = "#FFFFFF", // White text on AppBar
+        DrawerBackground = "#2c2c2c", // Dark gray Drawer
+        DrawerText = "#FFFFFF",
+        DrawerIcon = "#FFFFFF",
+        TextPrimary = "#000000", // Black text elsewhere
+        TextSecondary = "#333333",
+        GrayLight = "#f5c882",
+        GrayLighter = "#fff3d6"
     };
 
     private readonly PaletteDark _darkPalette = new()
     {
-        Primary = "#7e6fff",
-        Surface = "#1e1e2d",
+        Primary = "#FFA500",
         Background = "#FFA500",
-        BackgroundGray = "#151521",
-        AppbarText = "#92929f",
-        AppbarBackground = "rgba(26,26,39,0.8)",
-        DrawerBackground = "#1a1a27",
-        ActionDefault = "#74718e",
-        ActionDisabled = "#9999994d",
-        ActionDisabledBackground = "#605f6d4d",
-        TextPrimary = "#b2b0bf",
-        TextSecondary = "#92929f",
-        TextDisabled = "#ffffff33",
-        DrawerIcon = "#92929f",
-        DrawerText = "#92929f",
-        GrayLight = "#2a2833",
-        GrayLighter = "#1e1e2d",
+        Surface = "#E59400",
+        AppbarBackground = "#2c2c2c",
+        AppbarText = "#FFFFFF",
+        DrawerBackground = "#2c2c2c",
+        DrawerText = "#FFFFFF",
+        DrawerIcon = "#FFFFFF",
+        TextPrimary = "#000000",
+        TextSecondary = "#333333",
+        ActionDefault = "#E0E0E0",
+        ActionDisabled = "#BDBDBD",
+        ActionDisabledBackground = "#757575",
+        GrayLight = "#f5c882",
+        GrayLighter = "#fff3d6",
         Info = "#4a86ff",
         Success = "#3dcb6c",
         Warning = "#ffb545",
@@ -90,7 +94,7 @@
         LinesDefault = "#33323e",
         TableLines = "#33323e",
         Divider = "#292838",
-        OverlayLight = "#1e1e2d80",
+        OverlayLight = "#1e1e2d80"
     };
 
     public string DarkLightModeButtonIcon => _isDarkMode switch

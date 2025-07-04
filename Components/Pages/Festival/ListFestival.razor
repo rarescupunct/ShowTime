@@ -42,8 +42,8 @@
             <MudTextField Label="Location"
                           @bind-Value="context.Location" For="@(() => context.Location)"/>
             <MudDivider/>
-            <MudDatePicker Label="Start Date" DateFormat="dd.mm.yyyy" @bind-Date="startdate"/>
-            <MudDatePicker Label="End Date" DateFormat="dd.mm.yyyy" @bind-Date="enddate"/>
+            <MudDatePicker Label="Start Date" @bind-Date="startdate"/>
+            <MudDatePicker Label="End Date" @bind-Date="enddate"/>
             <MudButton Color="Color.Tertiary" OnClick="@(() => Save(context))">Save</MudButton>
             <MudButton Color="Color.Error" OnClick="@(() => edit=null)">Cancel</MudButton>
         }
@@ -70,12 +70,16 @@
 
     private async void Save(Festival festival)
     {
-        festival.StartDate = startdate.Value;
-        festival.EndDate = enddate.Value;
-        repo.Update(festival);
-        await repo.SaveChangesAsync();
-        Elements = await repo.GetAllAsync();
+        bool succes = true;
+        if (startdate < DateTime.Today) succes = false;
+        else if (enddate < startdate) succes = false;
+        if (succes)
+        {
+            repo.Update(festival);
+            await repo.SaveChangesAsync();
+            Elements = await repo.GetAllAsync();
+            StateHasChanged();
+        }
         edit = null;
-        StateHasChanged();
     }
 }

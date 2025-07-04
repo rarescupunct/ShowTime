@@ -65,7 +65,7 @@
             model.EndDate = enddate.Value;
             await repo.AddAsync(model);
             success = true;
+            await repo.SaveChangesAsync();
         }
-        await repo.SaveChangesAsync();
     }
 }

@@ -13,12 +13,12 @@ namespace ShowTime.Repositories.Implementation{
         
         public async Task<IEnumerable<Booking>> GetBookingsByFestivalAsync(Guid festivalId)
         {
-            return await _dbSet.Where(b => b.FestivalID == festivalId).ToListAsync();
+            return Context.Bookings.Where(b => b.FestivalId == festivalId);
         }
         
         public async Task<int> GetBookingCountForFestivalAsync(Guid festivalId)
         {
-            return await _dbSet.CountAsync(b => b.FestivalID == festivalId);
+            return await DbSet.CountAsync(b => b.FestivalId == festivalId);
         }
     }
 }

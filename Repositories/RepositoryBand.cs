@@ -17,7 +17,7 @@ namespace ShowTime.Repositories.Implementation{
         
          public async Task<IEnumerable<Band>> GetByGenreAsync(Genre genre)
         {
-            return await _dbSet.Where(e => e.Genre == genre).ToListAsync(); 
+            return await DbSet.Where(e => e.Genre == genre).ToListAsync(); 
         }
         
     }

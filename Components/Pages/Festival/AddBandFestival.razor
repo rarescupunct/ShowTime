@@ -7,37 +7,39 @@
 @inject IRepositoryBand repoband
 @inject IRepositoryFestivals repofesttivals
 
-
-<MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" ItemDropped="ItemUpdated" Class="d-flex flex-wrap flex-grow-1">
-    <ChildContent>
-        <MudDropZone T="DropItem" Identifier="Drop Zone 1" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
-            <MudText Typo="Typo.h6" Class="mb-4">Drop Zone 1</MudText>
-        </MudDropZone>
-        <MudDropZone T="DropItem" Identifier="Drop Zone 2" Class="rounded mud-background-gray pa-6 ma-8 flex-grow-1">
-            <MudText Typo="Typo.h6" Class="mb-4">Drop Zone 2</MudText>
-        </MudDropZone>
-    </ChildContent>
-    <ItemRenderer>
-        <MudPaper Elevation="25" Class="pa-4 my-4">@context.Name</MudPaper>
-    </ItemRenderer>
-</MudDropContainer>
-
+<MudTable Items="@Festivals" Hover="true" Breakpoint="Breakpoint.Sm">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.Name</MudTd>
+        <MudButton Color="Color.Success" @onclick="()=>pickedfestival = context.ID">Pick Me</MudButton>
+        </RowTemplate>
+</MudTable>
+@if (pickedfestival != null)
+{
+    <MudTable Items="@Bands" Hover="true" Breakpoint="Breakpoint.Sm">
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.Name</MudTd>
+            <MudButton Color="Color.Success" @onclick="()=>pickedfestival=null">Add to Festival</MudButton>
+        </RowTemplate>
+    </MudTable>
+    
+}
 @code {
-    private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
-    {
-        dropItem.Item.Identifier = dropItem.DropzoneIdentifier;
-    }
+    private Guid? pickedfestival;
+    private IEnumerable<Festival> Festivals = new List<Festival>();
+    private IEnumerable<Band> Bands = new List<Band>();
     
-    private List<DropItem> _items = new()
-    {
-        new DropItem(){ Name = "Drag me!", Identifier = "Drop Zone 1" },
-        new DropItem(){ Name = "Or me!", Identifier = "Drop Zone 2" },
-        new DropItem(){ Name = "Just Mud", Identifier = "Drop Zone 1" },
-    };
     
-    public class DropItem
+    protected override async Task OnInitializedAsync()
     {
-        public string Name { get; init; }
-        public string Identifier { get; set; }
+        Festivals = await repofesttivals.GetAllAsync();
+        Bands = await repoband.GetAllAsync();
     }
+
+    
 }

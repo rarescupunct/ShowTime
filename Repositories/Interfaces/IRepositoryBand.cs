@@ -8,5 +8,6 @@ namespace ShowTime.Repositories.Interfaces{
     public interface IRepositoryBand: IRepositoryBase<Band>
     {
         public Task<IEnumerable<Band>> GetByGenreAsync(Genre genre);
+        
     }
 }
