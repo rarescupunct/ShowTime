@@ -22,13 +22,13 @@ namespace ShowTime.Repositories.Implementation{
 
         public async Task<IEnumerable<Band>> GetAvailableByIdAsync(Guid festivalID)
         {
-            // Step 1: Get all band IDs already in the given festival
+            
             var assignedBandIds = await Context.BandFestivals
                 .Where(bf => bf.FestivalID == festivalID)
                 .Select(bf => bf.BandID)
                 .ToListAsync();
 
-            // Step 2: Return bands that are NOT in that list
+            
             return await Context.Bands
                 .Where(b => !assignedBandIds.Contains(b.Id))
                 .ToListAsync();

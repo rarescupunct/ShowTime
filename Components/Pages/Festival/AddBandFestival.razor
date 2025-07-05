@@ -7,6 +7,7 @@
 
 @inject IRepositoryBand repoband
 @inject IRepositoryFestivals repofestivals
+@inject IRepositoryBF repobf
 
 
 @if (pickedfestival == null)
@@ -29,10 +30,10 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Nr">@context.Name</MudTd>
-            <MudButton Color="Color.Success" @onclick="AddBandToFestivalAsync">Add to Festival</MudButton>
+            <MudButton Color="Color.Success" @onclick="()=>AddBandToFestivalAsync(context)">Add to Festival</MudButton>
         </RowTemplate>
     </MudTable>
-    
+    <MudButton Color="Color.Success" @onclick="()=>pickedfestival=null">Back to Festivals</MudButton>
 }
 @code {
     private Festival pickedfestival;
@@ -52,15 +53,15 @@ else
         Bands = await repoband.GetAvailableByIdAsync(festival.ID);
     }
     
-    private async Task AddBandToFestivalAsync()
+    private async Task AddBandToFestivalAsync(Band band)
     {
-        if (pickedband != null && pickedfestival != null)
+        Console.WriteLine("fuction activated");
+        if (band != null && pickedfestival != null)
         {
-            await repoband.AddBFContextAsync(pickedband, pickedfestival);
+            await repobf.AddAsync(band.Id, pickedfestival.ID);
         }
-        
 
-        pickedfestival = null;
+        await repobf.SaveChangesAsync();
         StateHasChanged();
     }
 }

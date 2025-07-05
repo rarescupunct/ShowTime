@@ -7,6 +7,6 @@ public class Festival
     public string Location { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public ICollection<BandFestival> BandFestivals { get; set; }
-    public ICollection<Booking> Bookings { get; set; }
+    public ICollection<BandFestival> BandFestivals { get; set; } = new List<BandFestival>();
+    public ICollection<Booking> Bookings { get; set; } =  new List<Booking>();
 }

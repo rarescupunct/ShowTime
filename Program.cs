@@ -23,6 +23,7 @@ builder.Services.AddDbContext<ShowTimeContext>(options =>
 builder.Services.AddScoped<IRepositoryBand, RepositoryBand>();
 builder.Services.AddScoped<IRepositoryFestivals, RepositoryFestivals>();
 builder.Services.AddScoped<IRepositoryBooking, RepositoryBooking>();
+builder.Services.AddScoped<IRepositoryBF, RepositoryBF>();
 
 var app = builder.Build();
 
