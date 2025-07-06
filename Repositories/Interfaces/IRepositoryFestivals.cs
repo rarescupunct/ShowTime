@@ -6,6 +6,5 @@ namespace ShowTime.Repositories.Interfaces{
     {
         Task<IEnumerable<Festival>> GetUpcomingFestivalsAsync(DateTime fromDate);
         Task<Festival> GetFestivalByNameAsync(string festivalName);
-        
     }
 }

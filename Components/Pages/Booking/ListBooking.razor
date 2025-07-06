@@ -1,0 +1,64 @@
+@page "/listbooking"
+@using ShowTime.Models
+@using ShowTime.Repositories.Interfaces
+@rendermode InteractiveServer
+
+@inject IRepositoryBooking repobooking
+
+
+<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>ID</MudTh>
+        <MudTh>Festival</MudTh>
+        <MudTh>Date</MudTh>
+        <MudTh>Update</MudTh>
+        <MudTh>Delete</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        @if (edit != context.Id)
+        {
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="Festival">@context.Festival.Name</MudTd>
+            <MudTd DataLabel="Date">
+                @context.Date
+            </MudTd>
+            <MudTd DataLabel="Update">
+                <MudButton Color="Color.Tertiary" @onclick="() => edit = context.Id">Update</MudButton>
+            </MudTd>
+
+            <MudTd DataLabel="Delete">
+                <MudButton Color="Color.Tertiary" @onclick="() => DeleteAsync(context)">Delete</MudButton>
+            </MudTd>
+        }
+        else
+        {
+            
+            <MudButton Color="Color.Tertiary" OnClick="@(() => Save(context))">Save</MudButton>
+            <MudButton Color="Color.Error" OnClick="@(() => edit=null)">Cancel</MudButton>
+        }
+    </RowTemplate>
+</MudTable>
+
+@code {
+    private Guid? edit;
+    private IEnumerable<Booking> Elements = new List<Booking>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await repobooking.GetAllAsync();
+    }
+
+    private async void DeleteAsync(Booking festival)
+    {
+        repobooking.Delete(festival);
+        await repobooking.SaveChangesAsync();
+        Elements = await repobooking.GetAllAsync();
+        StateHasChanged();
+    }
+
+    private async void Save(Booking booking)
+    {
+        edit = null;
+    }
+
+}

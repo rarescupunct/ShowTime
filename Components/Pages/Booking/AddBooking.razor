@@ -21,7 +21,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudButton Color="Color.Success" @onclick="()=>pickedfestival=context">Pick Me</MudButton>
+            <MudButton Color="Color.Success" @onclick="()=>pickedfestival=context.ID">Pick Me</MudButton>
         </RowTemplate>
     </MudTable>
 </MudContainer>
@@ -71,7 +71,7 @@ else
 @code {
     private IEnumerable<Festival> festivals = new List<Festival>();
     Booking model = new();
-    Festival pickedfestival = new();
+    private Guid? pickedfestival;
     
     bool success;
     private DateTime? date = DateTime.Today;
@@ -83,15 +83,19 @@ else
 
     private async Task OnValidSubmit()
     {
-        if (date < DateTime.Today)
+        if (pickedfestival != null)
         {
-            success = false;
+            var festival = await repofestivals.GetByIdAsync(pickedfestival.Value);
+            model.FestivalId = pickedfestival.Value;
+            if (date >= festival.StartDate)
+            {
+                model.Date = date.Value;
+                repobooking.AddAsync(model);
+                await repobooking.SaveChangesAsync();
+                success = true;
+            }
+            else success = false;
         }
-        else
-        {
-            model.Date = date.Value;
-            repobooking.AddAsync(model);
-            await repobooking.SaveChangesAsync();
-        }
+        else success = false;
     }
 }
