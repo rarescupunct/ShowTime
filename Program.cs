@@ -1,7 +1,11 @@
+using Identification.Components.Account;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using ShowTime.Components;
 using ShowTime.Data;
+using ShowTime.Models;
 using ShowTime.Repositories.Implementation;
 using ShowTime.Repositories.Interfaces;
 
@@ -24,6 +28,29 @@ builder.Services.AddScoped<IRepositoryBand, RepositoryBand>();
 builder.Services.AddScoped<IRepositoryFestivals, RepositoryFestivals>();
 builder.Services.AddScoped<IRepositoryBooking, RepositoryBooking>();
 builder.Services.AddScoped<IRepositoryBF, RepositoryBF>();
+
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<IdentityUserAccessor>();
+builder.Services.AddScoped<IdentityRedirectManager>();
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = IdentityConstants.ApplicationScheme;
+        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddIdentityCookies();
+
+builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole<Guid>>()
+    .AddEntityFrameworkStores<ShowTimeContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddAntiforgery();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

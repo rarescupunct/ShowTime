@@ -1,0 +1,54 @@
+﻿@page "/festivals"
+@using ShowTime.Models
+@using ShowTime.Repositories.Interfaces
+@rendermode InteractiveServer
+
+@inject IRepositoryFestivals repofestivals
+
+@if (editfestival == null && editlineup == null)
+{
+    @foreach (var element in Elements)
+    {
+        <MudCard Outlined="true">
+            <MudCardHeader>
+                <MudText Typo="Typo.h6">@element.Name</MudText>
+            </MudCardHeader>
+            <MudCardContent>
+                
+                <MudText Typo="Typo.body1">
+                    Line-up: @string.Join(" ", element.BandFestivals.Select(bf => bf.Band.Name))
+                </MudText>
+                <MudText Typo="Typo.body2">
+                    Se tine intre datele: @element.StartDate.ToString("dd-MM-yyyy") - @element.EndDate.ToString("dd-MM-yyyy")
+                </MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" @onclick="()=>editfestival = element.ID">Edit Festival</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.SaveAs" @onclick="()=>editlineup = element.ID">Edit Line-up</MudButton>
+                <MudSpacer/>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" @onclick="()=>DeleteAsync(element)">Delete Festival</MudButton>
+            </MudCardActions>
+        </MudCard>
+    }
+}
+else
+{
+    
+}
+
+@code{
+    protected IEnumerable<Models.Festival> Elements = new List<Models.Festival>();
+    private Guid? editfestival, editlineup;
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await repofestivals.GetAllDataAsync();
+    }
+    
+    private async void DeleteAsync(Models.Festival festival)
+    {
+        repofestivals.Delete(festival);
+        await repofestivals.SaveChangesAsync();
+        Elements = await repofestivals.GetAllAsync();
+        StateHasChanged();
+    }
+}

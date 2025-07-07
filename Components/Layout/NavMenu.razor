@@ -1,4 +1,7 @@
-﻿
+﻿@implements IDisposable
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+
 <MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
@@ -17,12 +20,47 @@
         <MudNavLink Href="/addbooking">Add New Booking(nu mere)</MudNavLink>
         <MudNavLink Href="/listbooking">Show Bookings(wip)</MudNavLink>
     </MudNavGroup>
+    <AuthorizeView>
+        <Authorized>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="Account/Manage">
+                    <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <form action="Account/Logout" method="post">
+                    <AntiforgeryToken/>
+
+                    <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
+                    <button type="submit" class="nav-link">
+                        <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                    </button>
+                </form>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="Account/Register">
+                    <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="Account/Login">
+                    <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                </NavLink>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+
+
 </MudNavMenu>
 
 @code{
     bool _expandedFestivals;
     bool _expandedBookings;
     bool _expandedBands;
+    private string? currentUrl;
+    
     private void OnClickBigSmolBands()
     {
         _expandedBands = !_expandedBands;
@@ -35,6 +73,24 @@
     {
         _expandedBookings = !_expandedBookings;
     }
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
 }
 
 

@@ -7,4 +7,7 @@ public class Booking
     public Guid FestivalId { get; set; }
     public Festival Festival { get; set; }
     public DateTime Date { get; set; }
+    
+    public Guid ApplicationUserId { get; set; }
+    public ApplicationUser ApplicationUser { get; set; }
 }

@@ -37,7 +37,6 @@ else
 }
 @code {
     private Festival pickedfestival;
-    private Band pickedband;
     private IEnumerable<Festival> Festivals = new List<Festival>();
     private IEnumerable<Band> Bands = new List<Band>();
     
@@ -60,7 +59,7 @@ else
         {
             await repobf.AddAsync(band.Id, pickedfestival.ID);
         }
-
+        Bands = await repoband.GetAvailableByIdAsync(pickedfestival.ID);
         await repobf.SaveChangesAsync();
         StateHasChanged();
     }

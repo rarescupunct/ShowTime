@@ -11,20 +11,23 @@
 
 @if (pickedfestival == null)
 {
-<MudContainer>
-    <MudText Align="Align.Start">
-        Selectati festivalul pentru care doriti sa faceti rezervarea:
-    </MudText>
-    <MudTable Items="@festivals">
-        <HeaderContent>
-            Name
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudButton Color="Color.Success" @onclick="()=>pickedfestival=context.ID">Pick Me</MudButton>
-        </RowTemplate>
-    </MudTable>
-</MudContainer>
+    <MudContainer>
+        <MudText Align="Align.Start">
+            Selectati festivalul pentru care doriti sa faceti rezervarea:
+        </MudText>
+        <MudTable Items="@festivals">
+            <HeaderContent>
+                <MudTh>Name</MudTh>
+                <MudTh>Action</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Name">@context.Name</MudTd>
+                <MudTd>
+                    <MudButton Color="Color.Success" @onclick="() => pickedfestival = context.ID">Pick Me</MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudContainer>
 }
 else
 {
@@ -55,7 +58,10 @@ else
             else
             {
                 <MudText Color="@Color.Error">
-                    <ValidationSummary />
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <MudText Color="Color.Error">@errorMessage</MudText>
+                    }
                 </MudText>
             }
         </MudPaper>
@@ -68,10 +74,12 @@ else
 </MudGrid>
 </EditForm>
 }
+
 @code {
     private IEnumerable<Festival> festivals = new List<Festival>();
     Booking model = new();
     private Guid? pickedfestival;
+    string errorMessage = "";
     
     bool success;
     private DateTime? date = DateTime.Today;
@@ -86,16 +94,38 @@ else
         if (pickedfestival != null)
         {
             var festival = await repofestivals.GetByIdAsync(pickedfestival.Value);
+        
+
             model.FestivalId = pickedfestival.Value;
-            if (date >= festival.StartDate)
+
+            if (date >= festival.StartDate && date <= festival.EndDate)
             {
                 model.Date = date.Value;
-                repobooking.AddAsync(model);
-                await repobooking.SaveChangesAsync();
-                success = true;
+                if (model.Email == null)
+                {
+                    success = false;
+                    errorMessage += "Must provide an e-mail.";
+                }
+                else
+                {
+                    await repobooking.AddAsync(model);
+                    await repobooking.SaveChangesAsync();
+                    success = true;
+                    errorMessage = "";
+                }
             }
-            else success = false;
+            else
+            {
+                success = false;
+                errorMessage += "Date must be within festival period.";
+            }
         }
-        else success = false;
+        else
+        {
+            success = false;
+            errorMessage += "You must pick a festival first.";
+        }
+        StateHasChanged();
     }
+
 }

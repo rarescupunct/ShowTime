@@ -4,7 +4,7 @@
 @rendermode InteractiveServer
 
 @inject IRepositoryBooking repobooking
-
+@inject IRepositoryFestivals repofestivals
 
 <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <HeaderContent>
@@ -18,7 +18,7 @@
         @if (edit != context.Id)
         {
             <MudTd DataLabel="ID">@context.Id</MudTd>
-            <MudTd DataLabel="Festival">@context.Festival.Name</MudTd>
+            <MudTd DataLabel="Festival">@placeholder</MudTd>
             <MudTd DataLabel="Date">
                 @context.Date
             </MudTd>
@@ -40,6 +40,8 @@
 </MudTable>
 
 @code {
+    private string placeholder = "Rezolva asta, prostule";
+    private Dictionary<Guid, string> FestivalNames = new();
     private Guid? edit;
     private IEnumerable<Booking> Elements = new List<Booking>();
 
@@ -48,15 +50,21 @@
         Elements = await repobooking.GetAllAsync();
     }
 
-    private async void DeleteAsync(Booking festival)
+    private async Task<string> GetFestivalNameAsync(Booking b)
     {
-        repobooking.Delete(festival);
+        var festival = await repofestivals.GetByIdAsync(b.FestivalId);
+        return festival.Name;
+    } 
+    
+    private async Task DeleteAsync(Booking booking)
+    {
+        repobooking.Delete(booking);
         await repobooking.SaveChangesAsync();
         Elements = await repobooking.GetAllAsync();
         StateHasChanged();
     }
 
-    private async void Save(Booking booking)
+    private async Task Save(Booking booking)
     {
         edit = null;
     }

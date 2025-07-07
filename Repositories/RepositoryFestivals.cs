@@ -17,12 +17,15 @@ namespace ShowTime.Repositories.Implementation{
                 .Where(f => f.StartDate >= fromDate)
                 .ToListAsync();
         }
-
         
-
         public async Task<Festival> GetFestivalByNameAsync(string festivalName)
         {
             return await DbSet.Where(f=>f.Name == festivalName).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Festival>> GetAllDataAsync()
+        {
+            return await Context.Festivals.Include(f => f.BandFestivals).ThenInclude(bf=>bf.Band).ToListAsync();
         }
         
     }
